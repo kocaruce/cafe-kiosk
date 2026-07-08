@@ -342,6 +342,7 @@ html, body {
 #cart-total {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 20px 60px;
   border: 5px solid var(--green);
   border-top: none;
@@ -351,6 +352,24 @@ html, body {
   font-weight: bold;
   color: var(--green);
 }
+/* 합계 금액: 왼쪽에 지폐/동전 그림, 오른쪽에 숫자 */
+#cart-total-amount {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-width: 0;
+}
+.money-stack {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 760px;
+}
+.money-stack .money.bill { height: 46px; }
+.money-stack .money.coin { height: 40px; }
+.total-won { white-space: nowrap; }
 
 #back-to-menu {
   position: absolute;

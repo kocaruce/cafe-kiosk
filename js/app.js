@@ -67,6 +67,24 @@ function priceIcons(price) {
        + `<img class="coin" src="${IMG}${COIN_IMG}" alt="백원">`.repeat(coins);
 }
 
+// 장바구니 합계처럼 큰 금액을 오만원~백원 지폐/동전을 최소 개수로 조합해 표현
+const MONEY_UNITS = [
+  { value: 50000, img: "50000.png",   cls: "bill", alt: "오만원" },
+  { value: 10000, img: "10000.png",   cls: "bill", alt: "만원" },
+  { value: 5000,  img: "5000.png",    cls: "bill", alt: "오천원" },
+  { value: 1000,  img: BILL_IMG,      cls: "bill", alt: "천원" },
+  { value: 100,   img: COIN_IMG,      cls: "coin", alt: "백원" },
+];
+function moneyIcons(amount) {
+  let rest = amount, html = "";
+  for (const u of MONEY_UNITS) {
+    const n = Math.floor(rest / u.value);
+    rest -= n * u.value;
+    html += `<img class="money ${u.cls}" src="${IMG}${u.img}" alt="${u.alt}">`.repeat(n);
+  }
+  return html;
+}
+
 let currentTab = "주스";
 let cart = {}; // name -> { item, qty }
 let timers = [];
@@ -205,8 +223,10 @@ function renderCart() {
     });
     rows.appendChild(row);
   });
-  document.getElementById("cart-total-amount").textContent =
-    cartTotal().toLocaleString() + "원";
+  const total = cartTotal();
+  document.getElementById("cart-total-amount").innerHTML =
+    `<span class="money-stack">${moneyIcons(total)}</span>` +
+    `<span class="total-won">${total.toLocaleString()}원</span>`;
   document.getElementById("checkout-btn").disabled = entries.length === 0;
 }
 
