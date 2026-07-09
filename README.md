@@ -3,6 +3,16 @@
 어린이집 아이들의 카페 놀이용 키오스크 웹페이지입니다.
 `키오스크.pptx` 화면 설계서(13장)를 분석해 그대로 웹으로 옮겼습니다.
 
+## 배포 주소 (GitHub Pages)
+
+| 화면 | 주소 | 로그인 |
+|---|---|---|
+| 키오스크 (손님) | https://kocaruce.github.io/cafe-kiosk/ | 불필요 |
+| 주문 현황 (직원) | https://kocaruce.github.io/cafe-kiosk/pos.html | 필요 🔒 |
+| 주문 내역 (날짜별) | https://kocaruce.github.io/cafe-kiosk/history.html | 필요 🔒 |
+
+직원 페이지는 Firebase 로그인 후에만 열립니다. 태블릿마다 최초 1회만 로그인하면 유지됩니다.
+
 ## 실행 방법
 
 정적 웹페이지라서 아무 웹서버로 열면 됩니다.
