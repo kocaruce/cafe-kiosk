@@ -4,7 +4,7 @@
 // └─────────────────────────────────────────────────────────────┘
 // 직원 페이지(주문현황·주문내역)에 로그인 잠금을 걸지 여부.
 // 로그인 계정 준비가 끝나면 true 로 바꿉니다. (키오스크는 영향 없음)
-window.REQUIRE_LOGIN = false;
+window.REQUIRE_LOGIN = true;
 
 window.FIREBASE_CONFIG = {
   apiKey: "AIzaSyBDN_SfYDOumAV4WME74Aj9jT1Ja_e2r4s",
