@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오로라 주스 가게 · 주문 현황 (직원용)</title>
+<link rel="stylesheet" href="css/pos.css">
+</head>
+<body>
+  <header id="pos-header">
+    <h1>🧃 오로라 주스 가게 · 주문 현황</h1>
+    <div id="pos-status">연결 중…</div>
+  </header>
+
+  <main id="pos-main">
+    <section class="col" id="col-new">
+      <h2>새 주문 <span class="count" id="count-new">0</span></h2>
+      <div class="orders" id="orders-new"></div>
+    </section>
+    <section class="col" id="col-done">
+      <h2>완료 <span class="count" id="count-done">0</span></h2>
+      <div class="orders" id="orders-done"></div>
+    </section>
+  </main>
+
+  <script src="js/firebase-config.js"></script>
+  <script type="module" src="js/orders.js"></script>
+  <script src="js/pos.js"></script>
+</body>
+</html>

@@ -280,7 +280,27 @@ document.querySelectorAll(".pay-btn").forEach(b => {
   };
 });
 
-function finishOrder() {
+async function finishOrder() {
+  // 현재 장바구니를 주문 내역으로 만들어 직원 포스로 전송 (Firebase 연동 시)
+  const payload = {
+    items: Object.values(cart).map(({ item, qty }) => ({
+      name: item.name, qty, price: item.price,
+    })),
+    total: cartTotal(),
+  };
+  let orderNo = null;
+  if (window.submitOrder) {
+    try { orderNo = await window.submitOrder(payload); } catch (e) { /* 전송 실패해도 완료 화면은 표시 */ }
+  }
+
+  const noEl = document.getElementById("done-order-no");
+  if (orderNo != null) {
+    noEl.textContent = `주문번호 ${orderNo}번`;
+    noEl.hidden = false;
+  } else {
+    noEl.hidden = true;
+  }
+
   sndDing();
   show("screen-done");                        // 주문이 완료되었습니다. 감사합니다.
   after(6000, resetKiosk);

@@ -484,6 +484,24 @@ html, body {
   text-shadow: 0 4px 0 rgba(255, 255, 255, .8);
 }
 
+/* 주문 완료 화면의 주문번호 배지 */
+#screen-done .order-no {
+  position: absolute;
+  top: 26%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  padding: 18px 64px;
+  font-size: 84px;
+  font-weight: bold;
+  color: #fff;
+  background: var(--green);
+  border-radius: 60px;
+  box-shadow: 0 10px 28px rgba(60, 110, 60, .35);
+  z-index: 3;
+}
+#screen-done .order-no[hidden] { display: none; }
+
 .dots span {
   display: inline-block;
   animation: dotJump 1.2s infinite;
