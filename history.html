@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오로라 주스 가게 · 주문 내역</title>
+<link rel="stylesheet" href="css/pos.css">
+</head>
+<body>
+  <header id="pos-header">
+    <h1>🧾 오로라 주스 가게 · 주문 내역</h1>
+    <a class="pos-link" href="pos.html">← 실시간 주문 현황</a>
+  </header>
+
+  <div id="hist-controls">
+    <button class="date-nav" id="prev-day" aria-label="이전 날">‹</button>
+    <input type="date" id="hist-date">
+    <button class="date-nav" id="next-day" aria-label="다음 날">›</button>
+    <button class="today-btn" id="today-btn">오늘</button>
+  </div>
+
+  <div id="hist-summary"></div>
+
+  <main id="hist-main">
+    <div class="orders" id="hist-orders"></div>
+    <p id="hist-empty" hidden>이 날짜에는 주문이 없어요.</p>
+  </main>
+
+  <script src="js/firebase-config.js"></script>
+  <script type="module" src="js/orders.js"></script>
+  <script src="js/history.js"></script>
+</body>
+</html>

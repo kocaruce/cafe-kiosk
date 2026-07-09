@@ -27,6 +27,7 @@ body {
   box-shadow: 0 4px 14px rgba(60, 110, 60, .25);
 }
 #pos-header h1 { font-size: 30px; }
+.header-right { display: flex; align-items: center; gap: 12px; }
 #pos-status {
   font-size: 18px;
   font-weight: bold;
@@ -36,6 +37,71 @@ body {
   white-space: nowrap;
 }
 #pos-status.off { background: #e7b93a; color: #5a3d00; }
+
+/* 페이지 간 이동 링크 (포스 ↔ 주문내역) */
+.pos-link {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, .22);
+  white-space: nowrap;
+}
+.pos-link:active { background: rgba(255, 255, 255, .35); }
+
+/* ── 주문내역: 날짜 컨트롤 ── */
+#hist-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 22px 6px;
+}
+#hist-date {
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: bold;
+  color: #2f3a2f;
+  padding: 8px 16px;
+  border: 3px solid var(--green);
+  border-radius: 14px;
+  background: #fff;
+}
+.date-nav, .today-btn {
+  font-family: inherit;
+  font-weight: bold;
+  border: 3px solid var(--green);
+  background: #fff;
+  color: var(--green);
+  border-radius: 14px;
+  cursor: pointer;
+}
+.date-nav { width: 48px; height: 48px; font-size: 28px; line-height: 1; }
+.today-btn { height: 48px; padding: 0 20px; font-size: 20px; }
+.date-nav:active, .today-btn:active { background: var(--green); color: #fff; }
+
+/* ── 주문내역: 요약 줄 ── */
+#hist-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 26px;
+  padding: 10px 24px 4px;
+  font-size: 22px;
+  color: #4a5a44;
+}
+#hist-summary .s-item b { color: var(--green); font-size: 26px; }
+#hist-summary .s-rev b { color: #d6763a; }
+#hist-summary .s-loading { color: #8aa17e; font-size: 20px; }
+
+#hist-main { padding: 14px 22px 30px; }
+#hist-empty {
+  padding: 60px 0;
+  text-align: center;
+  font-size: 26px;
+  color: #9bbf85;
+}
+.oc-badge.wait { color: var(--green); border-color: var(--green); }
 
 /* ── 본문: 새 주문 / 완료 두 칸 ── */
 #pos-main {
