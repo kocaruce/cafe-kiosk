@@ -260,9 +260,12 @@ document.getElementById("checkout-btn").onclick = () => {
   show("screen-pay");
 };
 
+let payMethod = null; // 손님이 고른 결제 수단 ("card" | "cash") — 주문과 함께 포스로 전송
+
 document.querySelectorAll(".pay-btn").forEach(b => {
   b.onclick = () => {
     sndTab();
+    payMethod = b.dataset.method;
     if (b.dataset.method === "cash") {
       show("screen-cash");                    // 현금은 직원에게 주세요.
       after(4000, finishOrder);
@@ -287,6 +290,7 @@ async function finishOrder() {
       name: item.name, qty, price: item.price,
     })),
     total: cartTotal(),
+    payMethod: payMethod || "unknown", // 카드/현금 — 포스에서 안내용
   };
   let orderNo = null;
   if (window.submitOrder) {
@@ -308,6 +312,7 @@ async function finishOrder() {
 
 function resetKiosk() {
   cart = {};
+  payMethod = null;
   updateBadge(false);
   show("screen-start");
 }

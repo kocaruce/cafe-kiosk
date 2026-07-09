@@ -5,6 +5,13 @@ function hhmm(ts) {
   return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 }
 
+// 결제 수단 표시 (카드/현금)
+function payBadge(m) {
+  if (m === "card") return `<span class="oc-pay card">💳 카드</span>`;
+  if (m === "cash") return `<span class="oc-pay cash">💵 현금</span>`;
+  return "";
+}
+
 function card(o) {
   const done = o.status === "done";
   const el = document.createElement("div");
@@ -16,6 +23,7 @@ function card(o) {
   el.innerHTML = `
     <div class="oc-head">
       <span class="oc-no">${o.no != null ? o.no + "번" : "-"}</span>
+      ${payBadge(o.payMethod)}
       <span class="oc-time">${hhmm(o.createdAt)}</span>
     </div>
     <ul class="oc-items">${items}</ul>

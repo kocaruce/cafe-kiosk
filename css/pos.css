@@ -167,7 +167,20 @@ body {
 }
 .oc-no { font-size: 46px; font-weight: bold; color: var(--green); }
 .order-card.done .oc-no { color: #9bbf85; }
-.oc-time { font-size: 22px; color: #8aa17e; }
+.oc-time { font-size: 22px; color: #8aa17e; margin-left: auto; }
+
+/* 결제 수단 배지 (카드/현금) */
+.oc-pay {
+  font-size: 20px;
+  font-weight: bold;
+  padding: 6px 14px;
+  border-radius: 14px;
+  margin-left: 12px;
+  white-space: nowrap;
+}
+.oc-pay.card { background: #E3EDFB; color: #2A5CA8; }
+.oc-pay.cash { background: #FFF3D6; color: #9A6B00; }
+.order-card.done .oc-pay { opacity: .7; }
 
 .oc-items { list-style: none; margin-bottom: 12px; }
 .oc-items li {
