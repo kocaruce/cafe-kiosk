@@ -283,6 +283,15 @@ document.querySelectorAll(".pay-btn").forEach(b => {
   };
 });
 
+// Realtime Database가 오프라인일 때 쓰기 요청이 응답 없이 멈춰있을 수 있어,
+// 일정 시간 안에 끝나지 않으면 포기하고 놀이 흐름을 계속 진행한다 (키오스크 먹통 방지).
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error("submit-timeout")), ms)),
+  ]);
+}
+
 async function finishOrder() {
   // 현재 장바구니를 주문 내역으로 만들어 직원 포스로 전송 (Firebase 연동 시)
   const payload = {
@@ -294,13 +303,21 @@ async function finishOrder() {
     payMethod: payMethod || "unknown", // 카드/현금 — 포스에서 안내용
   };
   let orderNo = null;
+  let pending = false; // 5초 안에 응답을 못 받음 (네트워크 문제 가능성) — 그래도 놀이는 계속 진행
   if (window.submitOrder) {
-    try { orderNo = await window.submitOrder(payload); } catch (e) { /* 전송 실패해도 완료 화면은 표시 */ }
+    try {
+      orderNo = await withTimeout(window.submitOrder(payload), 5000);
+    } catch (e) {
+      pending = true;
+    }
   }
 
   const noEl = document.getElementById("done-order-no");
   if (orderNo != null) {
     noEl.textContent = `주문번호 ${orderNo}번`;
+    noEl.hidden = false;
+  } else if (pending) {
+    noEl.textContent = `🔄 주문이 곧 반영돼요`;
     noEl.hidden = false;
   } else {
     noEl.hidden = true;

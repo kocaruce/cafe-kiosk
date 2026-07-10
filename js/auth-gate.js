@@ -57,6 +57,12 @@
     .gate-login:hover { background: #2E7D33; }
     .gate-box button:disabled { opacity: .6; cursor: default; }
     .gate-err { min-height: 18px; margin: 12px 0 0; font-size: 14px; color: #d24b3a; font-weight: 600; }
+    .gate-err.gate-ok { color: #2E7D33; }
+    .gate-forgot {
+      display: block; width: 100%; margin-top: 12px; background: none; border: none; padding: 0;
+      font-family: inherit; font-size: 13px; color: #7c8c78; text-decoration: underline; cursor: pointer;
+    }
+    .gate-forgot:hover { color: #2E7D33; }
     #gate-logout {
       position: fixed; right: 14px; bottom: 14px; z-index: 900;
       font-family: inherit; font-size: 14px; font-weight: 700; color: #2E7D33;
@@ -102,23 +108,38 @@
           <input id="gate-pw" type="password" placeholder="비밀번호" autocomplete="current-password" required>
           <button type="submit" class="gate-login" id="gate-login">로그인</button>
         </form>
+        <button type="button" class="gate-forgot" id="gate-forgot-btn">비밀번호를 잊으셨나요?</button>
         <p class="gate-err" id="gate-err"></p>
       </div>`);
     const err = ov.querySelector("#gate-err");
+    const setMsg = (m, ok) => { err.textContent = m; err.classList.toggle("gate-ok", !!ok); };
     const busy = (b) => ov.querySelectorAll("button,input").forEach(el => el.disabled = b);
     ov.querySelector("#gg-btn").onclick = async () => {
-      err.textContent = ""; busy(true);
+      setMsg(""); busy(true);
       try { await window.signInGoogle(); }
       catch (e) {
         busy(false);
-        if (e && e.code !== "auth/popup-closed-by-user") err.textContent = "구글 로그인에 실패했어요.";
+        if (e && e.code !== "auth/popup-closed-by-user") setMsg("구글 로그인에 실패했어요.");
       }
     };
     ov.querySelector("#gate-form").addEventListener("submit", async (e) => {
-      e.preventDefault(); err.textContent = ""; busy(true);
+      e.preventDefault(); setMsg(""); busy(true);
       try { await window.signIn(ov.querySelector("#gate-email").value.trim(), ov.querySelector("#gate-pw").value); }
-      catch (ex) { busy(false); err.textContent = "이메일 또는 비밀번호를 확인해 주세요."; }
+      catch (ex) { busy(false); setMsg("이메일 또는 비밀번호를 확인해 주세요."); }
     });
+    ov.querySelector("#gate-forgot-btn").onclick = async () => {
+      const email = ov.querySelector("#gate-email").value.trim();
+      if (!email) { setMsg("이메일을 먼저 입력해 주세요."); return; }
+      setMsg(""); busy(true);
+      try {
+        await window.sendPasswordReset(email);
+        busy(false);
+        setMsg("재설정 링크를 이메일로 보냈어요. 받은편지함을 확인해 주세요.", true);
+      } catch (ex) {
+        busy(false);
+        setMsg(ex && ex.code === "auth/invalid-email" ? "이메일 형식을 확인해 주세요." : "재설정 이메일 전송에 실패했어요.");
+      }
+    };
   }
 
   function enter() {

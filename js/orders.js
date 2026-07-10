@@ -11,7 +11,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import {
   getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut,
-  signInWithPopup, GoogleAuthProvider
+  signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 // 참고: onChildAdded 같은 실시간 리스너는 인덱스 없이 경고만 뜨지만,
 // get(query...) 는 인덱스가 없으면 에러가 나므로 조회는 전체를 받아 걸러낸다.
@@ -37,6 +37,7 @@ window.watchAuth = function (cb) { if (auth) onAuthStateChanged(auth, cb); };
 window.signIn = function (email, pw) { return signInWithEmailAndPassword(auth, email, pw); };
 window.signInGoogle = function () { return signInWithPopup(auth, new GoogleAuthProvider()); };
 window.signOutUser = function () { return signOut(auth); };
+window.sendPasswordReset = function (email) { return sendPasswordResetEmail(auth, email); };
 
 // 한국(KST, UTC+9) 기준 날짜 문자열 'YYYY-MM-DD' — 자정에 하루가 바뀜
 function kstDateKey(ts = Date.now()) {
