@@ -48,6 +48,7 @@
       border: 1px solid #e6e6e6; font-weight: 800; display: inline-flex;
       align-items: center; justify-content: center; font-size: 14px;
     }
+    .gate-gis { display: flex; justify-content: center; min-height: 44px; }
     .gate-or { display: flex; align-items: center; gap: 12px; margin: 16px 0; color: #9aab90; font-size: 13px; }
     .gate-or::before, .gate-or::after { content: ""; flex: 1; height: 1px; background: #E1EAD8; }
     .gate-login {
@@ -110,7 +111,7 @@
     const googleBlock = isInApp
       ? `<div class="gate-inapp">📱 지금 앱 속 브라우저로 열려 있어요. <b>구글 로그인은 Chrome·Safari에서만</b> 돼요. 아래 <b>이메일</b>로 로그인하시거나, 오른쪽 위 메뉴에서 <b>다른 브라우저로 열기</b>를 눌러주세요.</div>
          <div class="gate-or"><span>이메일로 로그인</span></div>`
-      : `<button type="button" class="gate-google" id="gg-btn"><span class="g">G</span> 구글로 계속하기</button>
+      : `<div class="gate-gis" id="gg-btn"></div>
          <div class="gate-or"><span>또는 이메일</span></div>`;
     const ov = overlay(`
       <div class="gate-box">
@@ -129,14 +130,11 @@
     const err = ov.querySelector("#gate-err");
     const setMsg = (m, ok) => { err.textContent = m; err.classList.toggle("gate-ok", !!ok); };
     const busy = (b) => ov.querySelectorAll("button,input").forEach(el => el.disabled = b);
-    ov.querySelector("#gg-btn").onclick = async () => {
-      setMsg(""); busy(true);
-      try { await window.signInGoogle(); }
-      catch (e) {
-        busy(false);
-        if (e && e.code !== "auth/popup-closed-by-user") setMsg("구글 로그인에 실패했어요.");
-      }
-    };
+    const gc = ov.querySelector("#gg-btn");
+    if (gc && window.renderGoogleButton) {
+      window.renderGoogleButton(gc, () => setMsg("구글 로그인에 실패했어요. 이메일로 로그인해 주세요."))
+        .catch(() => { gc.style.display = "none"; });
+    }
     ov.querySelector("#gate-form").addEventListener("submit", async (e) => {
       e.preventDefault(); setMsg(""); busy(true);
       try { await window.signIn(ov.querySelector("#gate-email").value.trim(), ov.querySelector("#gate-pw").value); }

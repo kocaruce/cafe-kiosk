@@ -11,7 +11,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import {
   getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut,
-  signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail
+  signInWithPopup, signInWithCredential, GoogleAuthProvider, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 // 참고: onChildAdded 같은 실시간 리스너는 인덱스 없이 경고만 뜨지만,
 // get(query...) 는 인덱스가 없으면 에러가 나므로 조회는 전체를 받아 걸러낸다.
@@ -37,6 +37,39 @@ window.watchAuth = function (cb) { if (auth) onAuthStateChanged(auth, cb); };
 window.signIn = function (email, pw) { return signInWithEmailAndPassword(auth, email, pw); };
 window.signInGoogle = function () { return signInWithPopup(auth, new GoogleAuthProvider()); };
 window.signOutUser = function () { return signOut(auth); };
+
+// Google Identity Services(GIS): 사파리 등 모바일에서 도메인 간 저장소 차단을
+// 우회하려고 구글 자체 도메인에서 ID 토큰을 받아 Firebase 로그인에 씀.
+const GOOGLE_CLIENT_ID = "1015329905358-6j63r1q02jafntdd93trrf3ice7kia7m.apps.googleusercontent.com";
+let _gisReady = null;
+function loadGIS() {
+  if (_gisReady) return _gisReady;
+  _gisReady = new Promise(function (resolve, reject) {
+    if (window.google && google.accounts && google.accounts.id) return resolve();
+    const s = document.createElement("script");
+    s.src = "https://accounts.google.com/gsi/client";
+    s.async = true; s.defer = true;
+    s.onload = resolve;
+    s.onerror = function () { reject(new Error("GIS load failed")); };
+    document.head.appendChild(s);
+  });
+  return _gisReady;
+}
+window.renderGoogleButton = async function (container, onError) {
+  await loadGIS();
+  google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: async function (resp) {
+      try { await signInWithCredential(auth, GoogleAuthProvider.credential(resp.credential)); }
+      catch (e) { if (onError) onError(e); }
+    },
+  });
+  google.accounts.id.renderButton(container, {
+    type: "standard", theme: "outline", size: "large",
+    text: "continue_with", shape: "pill", locale: "ko",
+    width: Math.min(container.offsetWidth || 320, 400),
+  });
+};
 window.sendPasswordReset = function (email) { return sendPasswordResetEmail(auth, email); };
 
 // 한국(KST, UTC+9) 기준 날짜 문자열 'YYYY-MM-DD' — 자정에 하루가 바뀜
