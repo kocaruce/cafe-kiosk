@@ -58,6 +58,11 @@
     .gate-box button:disabled { opacity: .6; cursor: default; }
     .gate-err { min-height: 18px; margin: 12px 0 0; font-size: 14px; color: #d24b3a; font-weight: 600; }
     .gate-err.gate-ok { color: #2E7D33; }
+    .gate-inapp {
+      background: #FEF6E6; border: 1px solid #F3D998; border-radius: 12px;
+      padding: 13px 15px; font-size: 13.5px; line-height: 1.6; color: #7a5a13; text-align: left; margin-bottom: 4px;
+    }
+    .gate-inapp b { color: #5a3d00; }
     .gate-forgot {
       display: block; width: 100%; margin-top: 12px; background: none; border: none; padding: 0;
       font-family: inherit; font-size: 13px; color: #7c8c78; text-decoration: underline; cursor: pointer;
@@ -94,15 +99,25 @@
     overlay(`<div class="gate-splash"><span class="em">${splashEm}</span><span class="tx">${splashTx}</span></div>`);
   }
 
+  function inAppBrowser() {
+    const ua = navigator.userAgent || "";
+    return /KAKAOTALK|NAVER|Instagram|FBAN|FBAV|FB_IAB|Line\/|Snapchat|DaumApps|everytimeApp|; wv\)/i.test(ua);
+  }
+
   function showLogin() {
     body.classList.add("gate-locked");
+    const isInApp = inAppBrowser();
+    const googleBlock = isInApp
+      ? `<div class="gate-inapp">📱 지금 앱 속 브라우저로 열려 있어요. <b>구글 로그인은 Chrome·Safari에서만</b> 돼요. 아래 <b>이메일</b>로 로그인하시거나, 오른쪽 위 메뉴에서 <b>다른 브라우저로 열기</b>를 눌러주세요.</div>
+         <div class="gate-or"><span>이메일로 로그인</span></div>`
+      : `<button type="button" class="gate-google" id="gg-btn"><span class="g">G</span> 구글로 계속하기</button>
+         <div class="gate-or"><span>또는 이메일</span></div>`;
     const ov = overlay(`
       <div class="gate-box">
         <div class="gate-brand">${splashEm} ${splashTx}</div>
         <h2>선생님 로그인</h2>
         <p class="gate-sub">꿈 놀이터 계정으로 로그인해 주세요.</p>
-        <button type="button" class="gate-google" id="gg-btn"><span class="g">G</span> 구글로 계속하기</button>
-        <div class="gate-or"><span>또는 이메일</span></div>
+        ${googleBlock}
         <form id="gate-form">
           <input id="gate-email" type="email" placeholder="이메일" autocomplete="username" required>
           <input id="gate-pw" type="password" placeholder="비밀번호" autocomplete="current-password" required>
